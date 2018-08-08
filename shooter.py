@@ -81,7 +81,7 @@ class MyGame(arcade.Window):
         self.boink_sound = arcade.sound.load_sound("boink.wav")
 
         # Our hero
-        self.player_sprite = arcade.Sprite("raspberry.png", 1)
+        self.player_sprite = arcade.Sprite("wapuu.png", 1)
         self.player_sprite.center_x = 400
         self.player_sprite.center_y = 50
         self.player_list.append(self.player_sprite)
@@ -116,13 +116,6 @@ class MyGame(arcade.Window):
         else:
             self.line_start = 0
 
-        # Draw vertical lines every 50 pixels
-        for x in range(0, 800, 50):
-            arcade.draw_line(x + self.line_start, 0, x + self.line_start, 600, arcade.color.BLUE_GRAY, 2)
-
-        # Draw horizontal lines every 50 pixels
-        for y in range(0, 600, 50):
-            arcade.draw_line(0, y + self.line_start, 800, y + self.line_start, arcade.color.BLUEBERRY, 2)
 
         # Draw all the sprites.
         self.enemies_list.draw()
@@ -150,8 +143,9 @@ class MyGame(arcade.Window):
         # Create a fireball
         fireball = Fireball("fireball.png", 1)
 
-        # play sound
-        _thread.start_new_thread(self.sound, ("fart",))
+        # play sound. If sound is blocking (eg. on Linux), thread it
+        #_thread.start_new_thread(self.sound, ("fart",))
+        self.sound("fart")
 
         # rotate it.
         fireball.angle = random.randrange(-15, 15)
