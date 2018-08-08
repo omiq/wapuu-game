@@ -26,6 +26,23 @@ class Bad_Guy(arcade.Sprite):
         self.angle += rotation
 
 
+class Player(arcade.Sprite):
+
+    def update(self):
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
+        if self.left < 0:
+            self.left = 0
+        elif self.right > 800 - 1:
+            self.right = 800 - 1
+
+        if self.bottom < 0:
+            self.bottom = 0
+        elif self.top > 600 - 1:
+            self.top = 600 - 1
+
+
 class MyGame(arcade.Window):
     """ Main application class. """
 
@@ -129,22 +146,47 @@ class MyGame(arcade.Window):
         arcade.draw_text(f"Score: {self.score}", 498, 498, arcade.color.DARK_RED, 36)
         arcade.draw_text(f"Score: {self.score}", 500, 500, arcade.color.ORANGE_RED, 36)
 
+    '''   
     def on_mouse_motion(self, x, y, dx, dy):
         """
         Called whenever the mouse moves.
         """
-        self.player_sprite.center_x = x
+        #self.player_sprite.center_x = x
 
     def on_mouse_press(self, x, y, button, modifiers):
         """
         Called whenever the mouse button is clicked.
         """
+    '''
+
+
+
+    def on_key_press(self, key, modifiers):
+        """Called whenever a key is pressed. """
+
+        MOVEMENT_SPEED = 10
+
+        if key == arcade.key.UP:
+            self.player_sprite.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.DOWN:
+            self.player_sprite.change_y = -MOVEMENT_SPEED
+        elif key == arcade.key.LEFT:
+            self.player_sprite.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT:
+            self.player_sprite.change_x = MOVEMENT_SPEED
+        elif key == arcade.key.SPACE:
+            self.fireball()
+        elif key == arcade.key.ESCAPE:
+            exit()
+
+
+    def fireball(self):
 
         # Create a fireball
         fireball = Fireball("fireball.png", 1)
 
         # play sound. If sound is blocking (eg. on Linux), thread it
-        #_thread.start_new_thread(self.sound, ("fart",))
+        # _thread.start_new_thread(self.sound, ("fart",))
         self.sound("fart")
 
         # rotate it.
@@ -157,11 +199,24 @@ class MyGame(arcade.Window):
         # Add the fireball to the appropriate lists
         self.fireball_list.append(fireball)
 
+
+    def on_key_release(self, key, modifiers):
+        """Called when the user releases a key. """
+
+        if key == arcade.key.UP or key == arcade.key.DOWN:
+            self.player_sprite.change_y = 0
+        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
+            self.player_sprite.change_x = 0
+
+
     def update(self, delta_time):
         """ Movement and game logic """
 
         # Call update on the enemies
         self.enemies_list.update()
+
+        # Call update on Wapuu
+        self.player_list.update()
 
         # Call update on fireball sprites
         self.fireball_list.update()
@@ -188,6 +243,7 @@ class MyGame(arcade.Window):
             # If the fireball flies off-screen, remove it.
             if fireball.bottom > 600:
                 fireball.kill()
+
 
 
 def main():
