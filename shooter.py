@@ -181,6 +181,7 @@ class MyGame(arcade.Window):
 
 
     def fireball(self):
+        """Fire phasers"""
 
         # Create a fireball
         fireball = Fireball("fireball.png", 1)
